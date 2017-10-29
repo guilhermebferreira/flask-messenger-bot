@@ -41,7 +41,10 @@ def webhook():
 
                     send_message(sender_id, "roger that!")
 
-                    send_action(sender_id ) # testing tiping action
+                    action_typing_on(sender_id ) # testing tiping action
+                    action_mark_seen(sender_id)
+                    action_typing_off(sender_id)
+
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
@@ -78,7 +81,20 @@ def send_message(recipient_id, message_text):
         log(r.status_code)
         log(r.text)
 
-def send_action(recipient_id):
+def action_typing_on(recipient_id):
+    send_action(recipient_id, "typing_on")
+
+def action_typing_off(recipient_id):
+    send_action(recipient_id, "typing_off")
+
+def action_mark_seen(recipient_id):
+    send_action(recipient_id, "mark_seen")
+
+def send_action(recipient_id, action):
+    #actions:
+    #   mark_seen
+    #   typing_on
+    #   typing_off
 
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -90,7 +106,7 @@ def send_action(recipient_id):
         "recipient": {
             "id": recipient_id
         },
-        "sender_action": "typing_on"
+        "sender_action": action
     })
     r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
     if r.status_code != 200:
