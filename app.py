@@ -39,12 +39,19 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
 
-                    send_message(sender_id, "roger that!")
+                    #send_message(sender_id, "roger that!")
 
-                    action_typing_on(sender_id ) # testing tiping action
-                    action_mark_seen(sender_id)
-                    action_typing_off(sender_id)
+                    #action_typing_on(sender_id ) # testing tiping action
+                    #action_mark_seen(sender_id)
+                    #action_typing_off(sender_id)
 
+                    if message_text == "oi":
+                        send_message(sender_id, "Olá")
+
+                    elif message_text == "ola":
+                        action_mark_seen(sender_id)
+                    elif message_text == "hello":
+                        action_typing_on(sender_id)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
