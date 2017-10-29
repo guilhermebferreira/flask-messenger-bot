@@ -44,6 +44,7 @@ def webhook():
                     #action_typing_on(sender_id ) # testing tiping action
                     #action_mark_seen(sender_id)
                     #action_typing_off(sender_id)
+                    send_message(sender_id, message_text)
 
                     if message_text == "oi":
                         send_message(sender_id, "Olá")
