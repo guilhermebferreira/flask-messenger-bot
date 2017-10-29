@@ -47,7 +47,7 @@ def webhook():
                     send_message(sender_id, message_text)
 
                     if message_text == "oi":
-                        send_message(sender_id, "Olá")
+                        send_message(sender_id, "Ola")
 
                     elif message_text == "ola":
                         action_mark_seen(sender_id)
