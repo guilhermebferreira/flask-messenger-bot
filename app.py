@@ -42,20 +42,13 @@ def webhook():
                     #send_message(sender_id, "roger that!")
 
                     #action_typing_on(sender_id ) # testing tiping action
-                    #action_mark_seen(sender_id)
-                    #action_typing_off(sender_id)
-                    send_message(sender_id, message_text)
 
                     if message_text == "oi":
                         send_message(sender_id, "Ola")
-                        log("if 1")
-
                     elif message_text == "ola":
                         action_mark_seen(sender_id)
-                        log("if 2")
                     elif message_text == "hello":
                         action_typing_on(sender_id)
-                        log("if 3")
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
