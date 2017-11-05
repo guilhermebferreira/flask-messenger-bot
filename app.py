@@ -52,7 +52,7 @@ def webhook():
                     elif message_text == "hello":
                         action_typing_on(sender_id)
                     elif message_text == "button":
-                        action_typing_on(sender_id)
+                        send_buttons(sender_id)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
