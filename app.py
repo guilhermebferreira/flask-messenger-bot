@@ -40,7 +40,7 @@ def webhook():
                     message_text = messaging_event["message"]["text"]  # the message's text
 
                     greetings = check_for_greeting(message_text)
-                    if(greetings):
+                    if(greetings != 0):
                         send_message(sender_id, greetings)
 
                     if message_text == "seen":
