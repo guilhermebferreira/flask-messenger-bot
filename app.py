@@ -1,4 +1,5 @@
 import os
+import random
 import sys
 import json
 
@@ -35,21 +36,16 @@ def webhook():
                 if messaging_event.get("message"):  # someone sent us a message
 
                     sender_id = messaging_event["sender"]["id"]  # the facebook ID of the person sending you the message
-                    recipient_id = messaging_event["recipient"][
-                        "id"]  # the recipient's ID, which should be your page's facebook ID
+                    recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
 
-                    # send_message(sender_id, "roger that!")
+                    greetings = check_for_greeting(message_text)
+                    if(greetings):
+                        send_message(sender_id, greetings)
 
-                    # action_typing_on(sender_id ) # testing tiping action
-                    # action_mark_seen(sender_id)
-                    # action_typing_off(sender_id)
-
-                    if message_text == "oi":
-                        send_message(sender_id, "Ola")
-                    elif message_text == "ola":
+                    if message_text == "seen":
                         action_mark_seen(sender_id)
-                    elif message_text == "hello":
+                    elif message_text == "type":
                         action_typing_on(sender_id)
                     elif message_text == "button":
                         send_buttons(sender_id)
@@ -79,13 +75,6 @@ def send(data):
 
 def send_message(recipient_id, message_text):
     log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text))
-
-    # params = {
-    #     "access_token": os.environ["PAGE_ACCESS_TOKEN"]
-    # }
-    # headers = {
-    #     "Content-Type": "application/json"
-    # }
     data = json.dumps({
         "recipient": {
             "id": recipient_id
@@ -94,10 +83,6 @@ def send_message(recipient_id, message_text):
             "text": message_text
         }
     })
-    # r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
-    # if r.status_code != 200:
-    #     log(r.status_code)
-    #     log(r.text)
     send(data);
 
 
@@ -160,6 +145,19 @@ def send_buttons(recipient_id):
         }
     })
     send(buttons)
+
+def check_for_greeting(user_input):
+    GREETING_KEYWORDS = ("hello", "hi", "oi", "ola", "olá", "bom dia", "bom noite", "bom tarde",)
+
+    GREETING_RESPONSES = ["Oi", "Olá :)", "Hey", "Oi!"]
+
+    for words in GREETING_KEYWORDS:
+        if words in user_input.lower():
+            # if inp.lower().find(words) == 0:
+            return random.choice(GREETING_RESPONSES)
+
+    return 0
+
 
 
 def log(message):  # simple wrapper for logging to stdout on heroku
