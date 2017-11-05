@@ -8,6 +8,9 @@ import json
 import requests
 from flask import Flask, request
 
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 app = Flask(__name__)
 
 
@@ -149,7 +152,7 @@ def send_buttons(recipient_id):
     send(buttons)
 
 def check_for_greeting(user_input):
-    GREETING_KEYWORDS = ("hello", "hi", "oi", "ola", "olá", "bom dia", "bom noite", "bom tarde",)
+    GREETING_KEYWORDS = ("hello", "hi", "oi", "ola", "olá", "bom dia", "bom noite", "bom tarde")
 
     GREETING_RESPONSES = ["Oi", "Olá :)", "Hey", "Oi!"]
 
