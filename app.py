@@ -65,7 +65,7 @@ def webhook():
 
     return "ok", 200
 
-def send(recipient_id, data):
+def send(data):
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
     }
@@ -98,7 +98,7 @@ def send_message(recipient_id, message_text):
     # if r.status_code != 200:
     #     log(r.status_code)
     #     log(r.text)
-    send(recipient_id, data);
+    send(data);
 
 
 def action_typing_on(recipient_id):
@@ -138,7 +138,7 @@ def send_action(recipient_id, action):
 
 
 def send_buttons(recipient_id):
-    buttons = {
+    buttons = json.dumps({
         "recipient": {
             "id": recipient_id
         },
@@ -158,8 +158,8 @@ def send_buttons(recipient_id):
                 }
             }
         }
-    }
-    send(recipient_id, buttons)
+    })
+    send(buttons)
 
 
 def log(message):  # simple wrapper for logging to stdout on heroku
