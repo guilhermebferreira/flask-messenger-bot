@@ -51,6 +51,8 @@ def webhook():
                         action_mark_seen(sender_id)
                     elif message_text == "hello":
                         action_typing_on(sender_id)
+                    elif message_text == "button":
+                        action_typing_on(sender_id)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
@@ -156,7 +158,8 @@ def send_buttons(recipient_id):
                 }
             }
         }
-    };
+    }
+    send(recipient_id, buttons)
 
 
 def log(message):  # simple wrapper for logging to stdout on heroku
