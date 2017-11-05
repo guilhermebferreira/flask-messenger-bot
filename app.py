@@ -22,7 +22,6 @@ def verify():
 
 @app.route('/', methods=['POST'])
 def webhook():
-
     # endpoint for processing incoming messaging events
 
     data = request.get_json()
@@ -35,15 +34,16 @@ def webhook():
 
                 if messaging_event.get("message"):  # someone sent us a message
 
-                    sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
-                    recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
+                    sender_id = messaging_event["sender"]["id"]  # the facebook ID of the person sending you the message
+                    recipient_id = messaging_event["recipient"][
+                        "id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
 
-                    #send_message(sender_id, "roger that!")
+                    # send_message(sender_id, "roger that!")
 
-                    #action_typing_on(sender_id ) # testing tiping action
-                    #action_mark_seen(sender_id)
-                    #action_typing_off(sender_id)
+                    # action_typing_on(sender_id ) # testing tiping action
+                    # action_mark_seen(sender_id)
+                    # action_typing_off(sender_id)
 
                     if message_text == "oi":
                         send_message(sender_id, "Olá")
@@ -64,17 +64,27 @@ def webhook():
 
     return "ok", 200
 
-
-def send_message(recipient_id, message_text):
-
-    log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text))
-
+def send(recipient_id, data):
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
     }
     headers = {
         "Content-Type": "application/json"
     }
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
+
+def send_message(recipient_id, message_text):
+    log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text))
+
+    # params = {
+    #     "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    # }
+    # headers = {
+    #     "Content-Type": "application/json"
+    # }
     data = json.dumps({
         "recipient": {
             "id": recipient_id
@@ -83,22 +93,27 @@ def send_message(recipient_id, message_text):
             "text": message_text
         }
     })
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
-    if r.status_code != 200:
-        log(r.status_code)
-        log(r.text)
+    # r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    # if r.status_code != 200:
+    #     log(r.status_code)
+    #     log(r.text)
+    send(recipient_id, data);
+
 
 def action_typing_on(recipient_id):
     send_action(recipient_id, "typing_on")
 
+
 def action_typing_off(recipient_id):
     send_action(recipient_id, "typing_off")
+
 
 def action_mark_seen(recipient_id):
     send_action(recipient_id, "mark_seen")
 
+
 def send_action(recipient_id, action):
-    #actions:
+    # actions:
     #   mark_seen
     #   typing_on
     #   typing_off
@@ -119,6 +134,31 @@ def send_action(recipient_id, action):
     if r.status_code != 200:
         log(r.status_code)
         log(r.text)
+
+
+def send_buttons(recipient_id):
+    buttons = {
+        "recipient": {
+            "id": recipient_id
+        },
+        "message": {
+            "attachment": {
+                "type": "template",
+                "payload": {
+                    "template_type": "button",
+                    "text": "What do you want to do next?",
+                    "buttons": [
+                        {
+                            "type": "web_url",
+                            "url": "https://www.messenger.com",
+                            "title": "Visit Messenger"
+                        }
+                    ]
+                }
+            }
+        }
+    };
+
 
 def log(message):  # simple wrapper for logging to stdout on heroku
     print str(message)
